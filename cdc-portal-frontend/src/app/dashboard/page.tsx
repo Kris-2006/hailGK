@@ -34,13 +34,13 @@ import Link from 'next/link';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import CompanyProfile from './profile';
 import CompanyContacts from './contacts';
-const statusStyleMap: Record<string, { bgcolor: string; color: string }> = {
-  draft: { bgcolor: 'rgba(90,100,120,0.1)', color: '#5A6478' },
-  submitted: { bgcolor: 'rgba(27,94,107,0.1)', color: '#1B5E6B' },
-  under_review: { bgcolor: 'rgba(200,146,42,0.15)', color: '#8B6000' },
-  approved: { bgcolor: 'rgba(34,100,60,0.1)', color: '#1d6b3a' },
-  rejected: { bgcolor: 'rgba(139,26,26,0.1)', color: '#8B1A1A' },
-  changes_requested: { bgcolor: 'rgba(217,119,6,0.1)', color: '#D97706' },
+const statusStyleMap: Record<string, { bgcolor: string; color: string; border?: string }> = {
+  draft: { bgcolor: 'rgba(100,116,139,0.08)', color: '#64748B' },
+  submitted: { bgcolor: 'rgba(10,22,40,0.06)', color: '#0A1628' },
+  under_review: { bgcolor: 'rgba(200,146,42,0.1)', color: '#C8922A' },
+  approved: { bgcolor: 'rgba(22,163,74,0.08)', color: '#16A34A' },
+  rejected: { bgcolor: 'rgba(220,38,38,0.08)', color: '#DC2626' },
+  changes_requested: { bgcolor: 'rgba(217,119,6,0.08)', color: '#D97706' },
 };
 
 export default function DashboardPage() {
@@ -145,10 +145,10 @@ export default function DashboardPage() {
       <Box
         sx={{
           bgcolor: '#0A1628',
-          color: 'rgba(255,255,255,0.7)',
+          color: 'rgba(255,255,255,0.5)',
           fontSize: '12px',
           px: '2rem',
-          py: '6px',
+          py: '8px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -157,10 +157,10 @@ export default function DashboardPage() {
         }}
       >
         <span>Indian Institute of Technology (ISM) Dhanbad — Est. 1926</span>
-        <Box sx={{ display: 'flex', gap: '12px' }}>
-          <Link href="/" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '12px' }}>Home</Link>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ color: 'rgba(255,255,255,0.5)' }}>{user?.email}</span>
+        <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: '12px' }}>Home</Link>
+          <Box sx={{ width: '1px', height: 12, bgcolor: 'rgba(255,255,255,0.1)' }} />
+          <span style={{ color: 'rgba(255,255,255,0.4)' }}>{user?.email}</span>
         </Box>
       </Box>
 
@@ -169,15 +169,15 @@ export default function DashboardPage() {
         {/* Sidebar */}
         <Box
           sx={{
-            width: 220,
-            bgcolor: '#0A1628',
+            width: 240,
+            background: 'linear-gradient(180deg, #0A1628 0%, #0D1B2E 100%)',
             display: { xs: 'none', md: 'flex' },
             flexDirection: 'column',
             flexShrink: 0,
           }}
         >
           {/* Sidebar Logo */}
-          <Box sx={{ px: 2, pt: 2.5, pb: 2, borderBottom: '1px solid rgba(255,255,255,0.08)', mb: 1.5, display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Box sx={{ px: 2.5, pt: 3, pb: 2.5, borderBottom: '1px solid rgba(255,255,255,0.06)', mb: 2, display: 'flex', alignItems: 'center', gap: '14px' }}>
             {/* Company Logo */}
             {freshCompany?.logo_path ? (
               <Box
@@ -185,28 +185,28 @@ export default function DashboardPage() {
                 src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/storage/${freshCompany.logo_path}`}
                 alt={freshCompany?.name || 'Company logo'}
                 sx={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '6px',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '10px',
                   objectFit: 'contain',
-                  bgcolor: 'rgba(255,255,255,0.1)',
+                  bgcolor: 'rgba(255,255,255,0.08)',
                   flexShrink: 0,
                 }}
               />
             ) : (
               <Box
                 sx={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '6px',
-                  bgcolor: 'rgba(200,146,42,0.2)',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, rgba(200,146,42,0.2), rgba(200,146,42,0.1))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
-                  fontFamily: '"EB Garamond", serif',
-                  fontSize: '16px',
-                  fontWeight: 600,
+                  fontFamily: '"Inter", sans-serif',
+                  fontSize: '17px',
+                  fontWeight: 700,
                   color: '#E8B64A',
                 }}
               >
@@ -215,10 +215,10 @@ export default function DashboardPage() {
             )}
             {/* Name + Email */}
             <Box sx={{ minWidth: 0 }}>
-              <Typography sx={{ fontFamily: '"EB Garamond", serif', fontSize: '15px', color: '#FEFEFE', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '14px', color: '#FEFEFE', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {company?.name || user?.name || 'Dashboard'}
               </Typography>
-              <Typography sx={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Typography sx={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.role === 'admin' ? 'CDC Admin Panel' : (user?.email || 'Recruiter Portal')}
               </Typography>
             </Box>
@@ -232,22 +232,25 @@ export default function DashboardPage() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                px: 2,
-                py: '9px',
-                fontSize: '13px',
+                gap: '12px',
+                px: 2.5,
+                py: '10px',
+                mx: 1,
+                mb: 0.5,
+                fontSize: '14px',
+                fontWeight: activeSideItem === item.label ? 600 : 400,
                 cursor: 'pointer',
-                transition: 'all 0.15s',
-                borderLeft: activeSideItem === item.label ? '3px solid #C8922A' : '3px solid transparent',
-                color: activeSideItem === item.label ? '#E8B64A' : 'rgba(255,255,255,0.55)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                borderRadius: '8px',
+                color: activeSideItem === item.label ? '#E8B64A' : 'rgba(255,255,255,0.5)',
                 bgcolor: activeSideItem === item.label ? 'rgba(200,146,42,0.08)' : 'transparent',
                 '&:hover': {
                   color: 'rgba(255,255,255,0.85)',
-                  bgcolor: 'rgba(255,255,255,0.05)',
+                  bgcolor: 'rgba(255,255,255,0.04)',
                 },
               }}
             >
-              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'currentColor', opacity: 0.6, flexShrink: 0 }} />
+              <Box sx={{ width: 5, height: 5, borderRadius: '50%', bgcolor: activeSideItem === item.label ? '#C8922A' : 'currentColor', opacity: activeSideItem === item.label ? 1 : 0.4, flexShrink: 0 }} />
               {item.label}
             </Box>
           ))}
@@ -259,33 +262,35 @@ export default function DashboardPage() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                px: 2,
-                py: '9px',
+                gap: '12px',
+                px: 2.5,
+                py: '10px',
+                mx: 1,
                 mb: 2,
-                fontSize: '13px',
+                fontSize: '14px',
                 cursor: 'pointer',
-                borderLeft: '3px solid transparent',
-                color: 'rgba(255,255,255,0.55)',
-                transition: 'all 0.15s',
-                '&:hover': { color: 'rgba(255,255,255,0.85)', bgcolor: 'rgba(255,255,255,0.05)' },
+                borderRadius: '8px',
+                color: 'rgba(255,255,255,0.4)',
+                transition: 'all 0.2s',
+                '&:hover': { color: '#DC2626', bgcolor: 'rgba(220,38,38,0.06)' },
               }}
               id="logout-btn"
             >
-              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'currentColor', opacity: 0.6, flexShrink: 0 }} />
+              <Box sx={{ width: 5, height: 5, borderRadius: '50%', bgcolor: 'currentColor', opacity: 0.5, flexShrink: 0 }} />
               Sign Out
             </Box>
           </Box>
         </Box>
 
         {/* Main Content */}
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#FEFEFE' }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#F7F8FA' }}>
           {/* Top Bar */}
           <Box
             sx={{
-              px: 3,
-              py: 2,
-              borderBottom: '1px solid rgba(10,22,40,0.12)',
+              px: 4,
+              py: 3,
+              bgcolor: '#FFFFFF',
+              borderBottom: '1px solid rgba(10,22,40,0.06)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -294,16 +299,16 @@ export default function DashboardPage() {
             <Box>
               {activeSideItem === 'Submissions' ? (
                 <>
-                  <Typography sx={{ fontFamily: '"EB Garamond", serif', fontSize: '48px', fontWeight: 500, fontStyle: 'normal', color: '#0A1628', lineHeight: 1.3 }}>
-                    Greetings, <Box component="span" sx={{ fontSize: '24px', fontStyle: 'italic', fontWeight: 500, color: '#1B5E6B' }}>{user?.name || company?.name || 'Recruiter'}</Box>
+                  <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '32px', fontWeight: 700, color: '#0A1628', lineHeight: 1.3, letterSpacing: '-0.02em' }}>
+                    Greetings, <Box component="span" sx={{ fontSize: '20px', fontWeight: 500, color: '#C8922A' }}>{user?.name || company?.name || 'Recruiter'}</Box>
                   </Typography>
                 </>
               ) : (
                 <>
-                  <Typography sx={{ fontSize: '16px', fontWeight: 500, color: '#0A1628' }}>
+                  <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '20px', fontWeight: 700, color: '#0A1628', letterSpacing: '-0.01em' }}>
                     {activeSideItem}
                   </Typography>
-                  <Typography sx={{ fontSize: '12px', color: '#5A6478', mt: '2px' }}>
+                  <Typography sx={{ fontSize: '13px', color: '#64748B', mt: '4px' }}>
                     {company?.name || user?.name} · {user?.role === 'admin' ? 'CDC Admin Dashboard' : 'Recruiter Dashboard'}
                   </Typography>
                 </>
@@ -318,9 +323,10 @@ export default function DashboardPage() {
                   size="small"
                   sx={{
                     fontFamily: '"DM Sans", sans-serif',
-                    fontSize: '12.5px',
-                    minWidth: 120,
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(10,22,40,0.12)' },
+                    fontSize: '13px',
+                    minWidth: 130,
+                    borderRadius: '8px',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(10,22,40,0.1)' },
                   }}
                   id="status-filter"
                 >
@@ -333,13 +339,14 @@ export default function DashboardPage() {
                 </Select>
                 <Button
                   sx={{
-                    fontSize: '12.5px',
+                    fontSize: '13px',
                     color: '#0A1628',
-                    border: '1px solid rgba(10,22,40,0.15)',
-                    borderRadius: '4px',
-                    px: '14px',
-                    py: '5px',
-                    '&:hover': { bgcolor: '#F4F6F9' },
+                    border: '1px solid rgba(10,22,40,0.1)',
+                    borderRadius: '8px',
+                    px: '16px',
+                    py: '6px',
+                    fontWeight: 600,
+                    '&:hover': { bgcolor: 'rgba(10,22,40,0.03)' },
                   }}
                   id="export-btn"
                 >
@@ -353,25 +360,25 @@ export default function DashboardPage() {
             <>
               {/* Workflow Banner for Recruiters */}
               {isRecruiter && currentWorkflowStep < 4 && (
-                <Box sx={{ px: 3, pt: 3, pb: 1.5, bgcolor: '#FEFEFE', borderBottom: '1px solid rgba(10,22,40,0.12)' }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: 600, color: '#0A1628', mb: 2, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <Box sx={{ px: 4, pt: 3, pb: 2, bgcolor: '#FFFFFF', borderBottom: '1px solid rgba(10,22,40,0.04)' }}>
+                  <Typography sx={{ fontSize: '12px', fontWeight: 600, color: '#C8922A', mb: 2, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     Onboarding Progress
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 2, mb: 1, flexDirection: { xs: 'column', md: 'row' } }}>
-                    <Box sx={{ flex: 1, p: 2, borderRadius: 2, border: '1px solid', borderColor: currentWorkflowStep >= 1 ? '#1B5E6B' : 'rgba(10,22,40,0.1)', bgcolor: currentWorkflowStep > 1 ? 'rgba(27,94,107,0.05)' : '#FEFEFE', position: 'relative' }}>
-                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep > 1 ? '#1B5E6B' : '#C8922A', mb: 0.5 }}>STEP 1</Typography>
-                      <Typography sx={{ fontSize: '14px', fontWeight: 500, color: '#0A1628' }}>Company Profile</Typography>
-                      <Typography sx={{ fontSize: '12px', color: '#5A6478', mt: 0.5 }}>{currentWorkflowStep > 1 ? '✓ Complete' : 'Pending Review'}</Typography>
+                    <Box sx={{ flex: 1, p: 2.5, borderRadius: '12px', border: '1px solid', borderColor: currentWorkflowStep > 1 ? 'rgba(200,146,42,0.2)' : 'rgba(10,22,40,0.06)', bgcolor: currentWorkflowStep > 1 ? 'rgba(200,146,42,0.04)' : '#FFFFFF', position: 'relative', transition: 'all 0.2s' }}>
+                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep > 1 ? '#16A34A' : '#C8922A', mb: 0.5 }}>STEP 1</Typography>
+                      <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#0A1628' }}>Company Profile</Typography>
+                      <Typography sx={{ fontSize: '12px', color: '#64748B', mt: 0.5 }}>{currentWorkflowStep > 1 ? '✓ Complete' : 'Pending Review'}</Typography>
                     </Box>
-                    <Box sx={{ flex: 1, p: 2, borderRadius: 2, border: '1px solid', borderColor: currentWorkflowStep >= 2 ? '#1B5E6B' : 'rgba(10,22,40,0.1)', bgcolor: currentWorkflowStep > 2 ? 'rgba(27,94,107,0.05)' : '#FEFEFE', opacity: currentWorkflowStep < 2 ? 0.6 : 1 }}>
-                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep > 2 ? '#1B5E6B' : currentWorkflowStep === 2 ? '#C8922A' : '#5A6478', mb: 0.5 }}>STEP 2</Typography>
-                      <Typography sx={{ fontSize: '14px', fontWeight: 500, color: '#0A1628' }}>Contacts & HR</Typography>
-                      <Typography sx={{ fontSize: '12px', color: '#5A6478', mt: 0.5 }}>{currentWorkflowStep > 2 ? '✓ Complete' : 'Requires Head HR & PoC1'}</Typography>
+                    <Box sx={{ flex: 1, p: 2.5, borderRadius: '12px', border: '1px solid', borderColor: currentWorkflowStep > 2 ? 'rgba(200,146,42,0.2)' : 'rgba(10,22,40,0.06)', bgcolor: currentWorkflowStep > 2 ? 'rgba(200,146,42,0.04)' : '#FFFFFF', opacity: currentWorkflowStep < 2 ? 0.5 : 1, transition: 'all 0.2s' }}>
+                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep > 2 ? '#16A34A' : currentWorkflowStep === 2 ? '#C8922A' : '#94A3B8', mb: 0.5 }}>STEP 2</Typography>
+                      <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#0A1628' }}>Contacts & HR</Typography>
+                      <Typography sx={{ fontSize: '12px', color: '#64748B', mt: 0.5 }}>{currentWorkflowStep > 2 ? '✓ Complete' : 'Requires Head HR & PoC1'}</Typography>
                     </Box>
-                    <Box sx={{ flex: 1, p: 2, borderRadius: 2, border: '1px solid', borderColor: currentWorkflowStep >= 3 ? '#1B5E6B' : 'rgba(10,22,40,0.1)', bgcolor: currentWorkflowStep >= 3 ? 'rgba(27,94,107,0.05)' : '#FEFEFE', opacity: currentWorkflowStep < 3 ? 0.6 : 1 }}>
-                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep === 3 ? '#1B5E6B' : '#5A6478', mb: 0.5 }}>STEP 3</Typography>
-                      <Typography sx={{ fontSize: '14px', fontWeight: 500, color: '#0A1628' }}>JNF / INF Filing</Typography>
-                      <Typography sx={{ fontSize: '12px', color: '#5A6478', mt: 0.5 }}>{currentWorkflowStep === 3 ? '✓ Unlocked' : 'Complete previous steps'}</Typography>
+                    <Box sx={{ flex: 1, p: 2.5, borderRadius: '12px', border: '1px solid', borderColor: currentWorkflowStep >= 3 ? 'rgba(200,146,42,0.2)' : 'rgba(10,22,40,0.06)', bgcolor: currentWorkflowStep >= 3 ? 'rgba(200,146,42,0.04)' : '#FFFFFF', opacity: currentWorkflowStep < 3 ? 0.5 : 1, transition: 'all 0.2s' }}>
+                      <Typography sx={{ fontSize: '11px', fontWeight: 700, color: currentWorkflowStep === 3 ? '#16A34A' : '#94A3B8', mb: 0.5 }}>STEP 3</Typography>
+                      <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#0A1628' }}>JNF / INF Filing</Typography>
+                      <Typography sx={{ fontSize: '12px', color: '#64748B', mt: 0.5 }}>{currentWorkflowStep === 3 ? '✓ Unlocked' : 'Complete previous steps'}</Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -383,33 +390,36 @@ export default function DashboardPage() {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(4, 1fr)',
                   gap: 2,
-                  px: 3,
-                  py: 2.5,
-                  borderBottom: '1px solid rgba(10,22,40,0.12)',
+                  px: 4,
+                  py: 3,
+                  borderBottom: '1px solid rgba(10,22,40,0.04)',
                 }}
               >
                 {metrics.map((metric) => (
                   <Box
                     key={metric.label}
                     sx={{
-                      bgcolor: '#F4F6F9',
-                      borderRadius: '8px',
-                      p: 2,
+                      bgcolor: '#FFFFFF',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(10,22,40,0.04)',
+                      p: 2.5,
+                      transition: 'all 0.2s',
+                      '&:hover': { boxShadow: '0 2px 8px rgba(10,22,40,0.04)' },
                     }}
                   >
                     <Typography
                       sx={{
-                        fontFamily: '"EB Garamond", serif',
-                        fontSize: '26px',
-                        fontWeight: 500,
+                        fontFamily: '"Inter", sans-serif',
+                        fontSize: '28px',
+                        fontWeight: 700,
                         color: '#0A1628',
                         lineHeight: 1,
-                        mb: '4px',
+                        mb: '6px',
                       }}
                     >
                       {metric.value}
                     </Typography>
-                    <Typography sx={{ fontSize: '11.5px', color: '#5A6478' }}>
+                    <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
                       {metric.label}
                     </Typography>
                   </Box>
@@ -417,24 +427,24 @@ export default function DashboardPage() {
               </Box>
 
               {/* Action Bar */}
-              <Box sx={{ px: 3, py: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(10,22,40,0.12)' }}>
-                <Typography sx={{ fontSize: '14px', fontWeight: 500, color: '#0A1628' }}>
+              <Box sx={{ px: 4, py: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: '#FFFFFF', borderBottom: '1px solid rgba(10,22,40,0.04)' }}>
+                <Typography sx={{ fontSize: '15px', fontWeight: 600, color: '#0A1628' }}>
                   My Submissions
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                <Box sx={{ display: 'flex', gap: 1.5 }}>
                   <Button
                     onClick={() => { setNewFormData({ ...newFormData, type: 'jnf' }); setCreateDialogOpen(true); }}
                     id="new-jnf-btn"
                     disabled={currentWorkflowStep < 3 && isRecruiter}
                     sx={{
-                      bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.1)' : '#0A1628',
-                      color: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.4)' : '#FEFEFE',
-                      fontSize: '12.5px',
-                      px: '16px',
-                      py: '6px',
-                      borderRadius: '4px',
-                      fontWeight: 500,
-                      '&:hover': { bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.1)' : '#2C3345' },
+                      bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.06)' : '#0A1628',
+                      color: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.3)' : '#FEFEFE',
+                      fontSize: '13px',
+                      px: '18px',
+                      py: '7px',
+                      borderRadius: '8px',
+                      fontWeight: 600,
+                      '&:hover': { bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.06)' : '#1A2A44' },
                     }}
                   >
                     + New JNF
@@ -444,14 +454,15 @@ export default function DashboardPage() {
                     id="new-inf-btn"
                     disabled={currentWorkflowStep < 3 && isRecruiter}
                     sx={{
-                      fontSize: '12.5px',
-                      color: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.4)' : '#1B5E6B',
+                      fontSize: '13px',
+                      color: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.3)' : '#C8922A',
                       border: '1px solid',
-                      borderColor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.1)' : 'rgba(27,94,107,0.3)',
-                      borderRadius: '4px',
-                      px: '16px',
-                      py: '6px',
-                      '&:hover': { bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'transparent' : 'rgba(27,94,107,0.05)' },
+                      borderColor: currentWorkflowStep < 3 && isRecruiter ? 'rgba(10,22,40,0.06)' : 'rgba(200,146,42,0.25)',
+                      borderRadius: '8px',
+                      px: '18px',
+                      py: '7px',
+                      fontWeight: 600,
+                      '&:hover': { bgcolor: currentWorkflowStep < 3 && isRecruiter ? 'transparent' : 'rgba(200,146,42,0.04)' },
                     }}
                   >
                     + New INF
@@ -460,7 +471,7 @@ export default function DashboardPage() {
               </Box>
 
               {/* Table */}
-              <Box sx={{ flex: 1, overflow: 'auto', px: 3 }}>
+              <Box sx={{ flex: 1, overflow: 'auto', px: 4, py: 1, bgcolor: '#FFFFFF', mx: 4, my: 2, borderRadius: '12px', border: '1px solid rgba(10,22,40,0.04)' }}>
                 <TableContainer>
                   <Table sx={{ '& td, & th': { borderBottomColor: 'rgba(10,22,40,0.08)' } }}>
                     <TableHead>
@@ -563,7 +574,7 @@ export default function DashboardPage() {
                                     component={Link}
                                     href={`/${notification.type}/${notification.id}`}
                                     size="small"
-                                    sx={{ p: '5px', borderRadius: '6px', color: '#1B5E6B', '&:hover': { bgcolor: 'rgba(27,94,107,0.1)' } }}
+                                    sx={{ p: '6px', borderRadius: '8px', color: '#0A1628', '&:hover': { bgcolor: 'rgba(10,22,40,0.04)' } }}
                                   >
                                     {['draft', 'changes_requested'].includes(notification.status) ? <EditIcon sx={{ fontSize: '17px' }} /> : <VisibilityIcon sx={{ fontSize: '17px' }} />}
                                   </IconButton>
@@ -574,7 +585,7 @@ export default function DashboardPage() {
                                       component={Link}
                                       href={`/${notification.type}/${notification.id}/preview`}
                                       size="small"
-                                      sx={{ p: '5px', borderRadius: '6px', color: '#5A6478', '&:hover': { bgcolor: 'rgba(90,100,120,0.1)' } }}
+                                      sx={{ p: '6px', borderRadius: '8px', color: '#64748B', '&:hover': { bgcolor: 'rgba(10,22,40,0.04)' } }}
                                     >
                                       <VisibilityIcon sx={{ fontSize: '17px' }} />
                                     </IconButton>
@@ -590,7 +601,7 @@ export default function DashboardPage() {
                                         }).catch(() => alert('Failed to duplicate.'));
                                       }
                                     }}
-                                    sx={{ p: '6px', borderRadius: '8px', color: '#1B5E6B', bgcolor: 'rgba(27,94,107,0.06)', transition: 'all 0.2s ease', '&:hover': { color: '#2A8A9E', bgcolor: 'rgba(42,138,158,0.15)', transform: 'scale(1.05)' } }}
+                                    sx={{ p: '6px', borderRadius: '8px', color: '#C8922A', bgcolor: 'rgba(200,146,42,0.06)', transition: 'all 0.2s ease', '&:hover': { color: '#E8B64A', bgcolor: 'rgba(200,146,42,0.12)', transform: 'scale(1.05)' } }}
                                   >
                                     <ForkRightIcon sx={{ fontSize: '20px' }} />
                                   </IconButton>
@@ -606,7 +617,7 @@ export default function DashboardPage() {
                                           }).catch(() => alert('Failed to delete.'));
                                         }
                                       }}
-                                      sx={{ p: '5px', borderRadius: '6px', color: '#8B1A1A', opacity: 0.8, '&:hover': { opacity: 1, bgcolor: 'rgba(139,26,26,0.1)' } }}
+                                      sx={{ p: '6px', borderRadius: '8px', color: '#DC2626', opacity: 0.7, '&:hover': { opacity: 1, bgcolor: 'rgba(220,38,38,0.06)' } }}
                                     >
                                       <DeleteIcon sx={{ fontSize: '17px' }} />
                                     </IconButton>
@@ -624,7 +635,7 @@ export default function DashboardPage() {
 
               {/* Mobile Sign Out */}
               <Box sx={{ display: { xs: 'block', md: 'none' }, px: 3, py: 2, borderTop: '1px solid rgba(10,22,40,0.12)' }}>
-                <Button onClick={handleLogout} fullWidth sx={{ fontSize: '13px', color: '#8B1A1A', border: '1px solid rgba(139,26,26,0.2)', borderRadius: '4px' }}>
+                <Button onClick={handleLogout} fullWidth sx={{ fontSize: '13px', color: '#DC2626', border: '1px solid rgba(220,38,38,0.15)', borderRadius: '8px', fontWeight: 600 }}>
                   Sign Out
                 </Button>
               </Box>
@@ -643,18 +654,19 @@ export default function DashboardPage() {
         onClose={() => setCreateDialogOpen(false)}
         PaperProps={{
           sx: {
-            borderRadius: '8px',
-            border: '1px solid rgba(10,22,40,0.12)',
-            maxWidth: 400,
+            borderRadius: '16px',
+            border: '1px solid rgba(10,22,40,0.06)',
+            maxWidth: 420,
             width: '100%',
+            boxShadow: '0 20px 60px rgba(10,22,40,0.12)',
           },
         }}
       >
         <DialogTitle sx={{ pb: 1 }}>
-          <Typography sx={{ fontFamily: '"EB Garamond", serif', fontSize: '22px', fontWeight: 500, color: '#0A1628' }}>
+          <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '20px', fontWeight: 700, color: '#0A1628' }}>
             New Submission
           </Typography>
-          <Typography sx={{ fontSize: '13px', color: '#5A6478', mt: '4px' }}>
+          <Typography sx={{ fontSize: '14px', color: '#64748B', mt: '6px' }}>
             Create a new JNF or INF form
           </Typography>
         </DialogTitle>
@@ -705,7 +717,7 @@ export default function DashboardPage() {
         <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
           <Button
             onClick={() => setCreateDialogOpen(false)}
-            sx={{ fontSize: '13px', color: '#5A6478', border: '1px solid rgba(10,22,40,0.15)', borderRadius: '4px' }}
+            sx={{ fontSize: '14px', color: '#64748B', border: '1px solid rgba(10,22,40,0.1)', borderRadius: '8px', fontWeight: 600 }}
           >
             Cancel
           </Button>
@@ -717,9 +729,10 @@ export default function DashboardPage() {
             sx={{
               bgcolor: '#0A1628',
               color: '#FEFEFE',
-              fontSize: '13px',
-              borderRadius: '4px',
-              '&:hover': { bgcolor: '#2C3345' },
+              fontSize: '14px',
+              borderRadius: '8px',
+              fontWeight: 600,
+              '&:hover': { bgcolor: '#1A2A44' },
             }}
           >
             {createMutation.isPending ? <CircularProgress size={20} sx={{ color: '#FEFEFE' }} /> : 'Create →'}
