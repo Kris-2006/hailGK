@@ -9,14 +9,12 @@ import {
   Grid,
   MenuItem,
   FormControl,
-  InputLabel,
   Select,
   Alert,
   CircularProgress,
   InputAdornment,
   IconButton,
   Chip,
-  LinearProgress,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -71,7 +69,7 @@ export default function RegisterPage() {
     setFormData({ ...formData, [field]: e.target.value });
   };
 
-  const handleSelectChange = (field: string) => (e: any) => {
+  const handleSelectChange = (field: string) => (e: { target: { value: string } }) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
 
@@ -165,8 +163,6 @@ export default function RegisterPage() {
     }
   };
 
-  const progressPercent = ((activeStep + 1) / steps.length) * 100;
-
   // Auto-redirect countdown after successful registration
   useEffect(() => {
     if (!registrationComplete) return;
@@ -178,80 +174,99 @@ export default function RegisterPage() {
     return () => clearTimeout(timer);
   }, [registrationComplete, countdown, router]);
 
+  // ─── Label helper — consistent with JNF/INF ───
+  const FieldLabel = ({ children, required = false }: { children: React.ReactNode; required?: boolean }) => (
+    <Typography sx={{ fontSize: '13px', color: '#334155', fontWeight: 600, mb: '8px' }}>
+      {children} {required && <Box component="span" sx={{ color: '#DC2626' }}>*</Box>}
+    </Typography>
+  );
+
+  // ─── Section header — matches JNF/INF section headers ───
+  const SectionHeader = ({ children }: { children: React.ReactNode }) => (
+    <Typography sx={{ fontSize: '12px', letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 600, mb: 2.5 }}>
+      {children}
+    </Typography>
+  );
+
   // ─── SUCCESS SCREEN ───
   if (registrationComplete) {
     return (
-      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: '#F7F8FA' }}>
         {/* Top Strip */}
-        <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.7)', fontSize: '12px', px: '2rem', py: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', letterSpacing: '0.02em', fontFamily: '"DM Sans", sans-serif' }}>
+        <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.5)', fontSize: '12px', px: '2rem', py: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', letterSpacing: '0.02em', fontFamily: '"DM Sans", sans-serif' }}>
           <span>Indian Institute of Technology (ISM) Dhanbad — Est. 1926</span>
         </Box>
 
         {/* Navbar */}
-        <Box sx={{ bgcolor: '#FEFEFE', borderBottom: '1px solid rgba(10,22,40,0.12)', px: '2rem', display: 'flex', alignItems: 'center', height: '60px', boxShadow: '0 2px 8px rgba(10,22,40,0.08)' }}>
+        <Box sx={{ bgcolor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(10,22,40,0.06)', px: '2rem', display: 'flex', alignItems: 'center', height: '64px', boxShadow: '0 1px 3px rgba(10,22,40,0.04)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '14px', maxWidth: 1200, width: '100%', mx: 'auto' }}>
             <Box component="img" src="/iit-ism-logo.svg" alt="IIT (ISM) Dhanbad" sx={{ width: 40, height: 40, objectFit: 'contain', flexShrink: 0 }} />
             <Box>
-              <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '15px', fontWeight: 600, color: '#0A1628', lineHeight: 1.2 }}>IIT (ISM) Dhanbad</Typography>
-              <Typography sx={{ fontSize: '10px', color: '#64748B', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Career Development Centre</Typography>
+              <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '16px', fontWeight: 700, color: '#0A1628', lineHeight: 1.2 }}>IIT (ISM) Dhanbad</Typography>
+              <Typography sx={{ fontSize: '10px', color: '#64748B', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 500 }}>Career Development Centre</Typography>
             </Box>
           </Box>
         </Box>
 
         {/* Success Content */}
-        <Box sx={{ flex: 1, bgcolor: '#F4F6F9', display: 'flex', alignItems: 'center', justifyContent: 'center', py: 5 }}>
-          <Box sx={{ maxWidth: 560, mx: 'auto', px: '2rem', textAlign: 'center' }}>
+        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', py: 6 }}>
+          <Box sx={{ maxWidth: 520, mx: 'auto', px: '2rem', textAlign: 'center' }}>
             {/* Success Icon */}
-            <Box sx={{ width: 80, height: 80, borderRadius: '50%', bgcolor: 'rgba(29,107,58,0.1)', border: '2px solid rgba(29,107,58,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 3 }}>
-              <Typography sx={{ fontSize: '36px', lineHeight: 1 }}>✓</Typography>
+            <Box sx={{
+              width: 72, height: 72, borderRadius: '50%',
+              bgcolor: 'rgba(22,163,74,0.08)', border: '2px solid rgba(22,163,74,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 3,
+              animation: 'scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              '@keyframes scaleIn': { '0%': { transform: 'scale(0.5)', opacity: 0 }, '100%': { transform: 'scale(1)', opacity: 1 } },
+            }}>
+              <Typography sx={{ fontSize: '32px', color: '#16A34A', lineHeight: 1 }}>✓</Typography>
             </Box>
 
-            <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '32px', fontWeight: 500, color: '#0A1628', lineHeight: 1.2, mb: 1.5 }}>
-              Registration <em style={{ color: '#1d6b3a' }}>Successful</em>
+            <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '28px', fontWeight: 700, color: '#0A1628', lineHeight: 1.2, mb: 1.5, letterSpacing: '-0.02em' }}>
+              Registration <Box component="span" sx={{ color: '#16A34A' }}>Successful</Box>
             </Typography>
 
             <Typography sx={{ fontSize: '15px', color: '#64748B', lineHeight: 1.7, mb: 4 }}>
-              Your company account has been created successfully. You can now access the CDC Recruitment Portal to submit JNF and INF forms.
+              Your company account has been created. You can now access the CDC Recruitment Portal.
             </Typography>
 
             {/* Details Card */}
-            <Box sx={{ bgcolor: '#FEFEFE', border: '1px solid rgba(10,22,40,0.12)', borderRadius: '8px', p: 3, textAlign: 'left', mb: 4, boxShadow: '0 2px 8px rgba(10,22,40,0.08)' }}>
-              <Typography sx={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 500, mb: 2 }}>Registration Details</Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 1.5, fontSize: '13.5px' }}>
-                <Typography sx={{ fontSize: '13px', color: '#64748B', fontWeight: 500 }}>Name</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#0A1628' }}>{formData.name}</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#64748B', fontWeight: 500 }}>Email</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#0A1628' }}>{formData.email}</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#64748B', fontWeight: 500 }}>Company</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#0A1628' }}>{formData.company_name}</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#64748B', fontWeight: 500 }}>Category</Typography>
-                <Typography sx={{ fontSize: '13px', color: '#0A1628' }}>{formData.company_category}</Typography>
+            <Box sx={{ bgcolor: '#FFFFFF', border: '1px solid rgba(10,22,40,0.06)', borderRadius: '16px', p: 3.5, textAlign: 'left', mb: 4, boxShadow: '0 4px 24px rgba(10,22,40,0.06)' }}>
+              <Typography sx={{ fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 600, mb: 2 }}>Registration Details</Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 1.5 }}>
+                <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}>Name</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#0A1628' }}>{formData.name}</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}>Email</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#0A1628' }}>{formData.email}</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}>Company</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#0A1628' }}>{formData.company_name}</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}>Category</Typography>
+                <Typography sx={{ fontSize: '14px', color: '#0A1628' }}>{formData.company_category}</Typography>
               </Box>
             </Box>
 
-            {/* Redirect Info + Button */}
             <Button
               variant="contained"
               onClick={() => router.push('/dashboard')}
               id="go-to-dashboard"
-              sx={{ bgcolor: '#C8922A', color: '#FEFEFE', fontSize: '14px', fontWeight: 600, px: 4, py: 1.5, '&:hover': { bgcolor: '#E8B64A' }, mb: 2 }}
+              sx={{ bgcolor: '#C8922A', color: '#FEFEFE', fontSize: '15px', fontWeight: 600, px: 4, py: 1.5, borderRadius: '10px', '&:hover': { bgcolor: '#E8B64A' }, mb: 2, boxShadow: '0 4px 16px rgba(200,146,42,0.3)' }}
             >
               Go to Dashboard →
             </Button>
-            <Typography sx={{ fontSize: '12px', color: '#64748B', fontFamily: '"JetBrains Mono", monospace' }}>
+            <Typography sx={{ fontSize: '12px', color: '#94A3B8', fontFamily: '"JetBrains Mono", monospace' }}>
               Auto-redirecting in {countdown}s...
             </Typography>
           </Box>
         </Box>
 
         {/* Footer */}
-        <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.5)', py: 2.5, px: '2rem' }}>
+        <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.3)', py: 2.5, px: '2rem' }}>
           <Box sx={{ maxWidth: 1200, mx: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Box sx={{ width: 20, height: 2, bgcolor: '#C8922A' }} />
-              CDC Recruitment Portal v1.0 · IIT (ISM) Dhanbad
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Box sx={{ width: 20, height: 2, bgcolor: '#C8922A', borderRadius: 1 }} />
+              CDC Recruitment Portal v2.0 · IIT (ISM) Dhanbad
             </Box>
-            <span>Next.js · MUI · Laravel · MySQL</span>
+            <span>© {new Date().getFullYear()} All rights reserved</span>
           </Box>
         </Box>
       </Box>
@@ -259,15 +274,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Top Strip */}
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: '#F7F8FA' }}>
+      {/* ─── Top Strip ─── */}
       <Box
         sx={{
           bgcolor: '#0A1628',
-          color: 'rgba(255,255,255,0.7)',
+          color: 'rgba(255,255,255,0.5)',
           fontSize: '12px',
           px: '2rem',
-          py: '6px',
+          py: '8px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -276,173 +291,158 @@ export default function RegisterPage() {
         }}
       >
         <span>Indian Institute of Technology (ISM) Dhanbad — Est. 1926</span>
-        <Box sx={{ display: 'flex', gap: '12px' }}>
-          <Link href="/" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '12px' }}>Home</Link>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <Link href="/login" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '12px' }}>Login</Link>
+        <Box sx={{ display: 'flex', gap: '16px' }}>
+          <Link href="/" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: '12px' }}>Home</Link>
+          <Link href="/login" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: '12px' }}>Login</Link>
         </Box>
       </Box>
 
-      {/* Navbar */}
+      {/* ─── Navbar — glassmorphism match ─── */}
       <Box
         sx={{
-          bgcolor: '#FEFEFE',
-          borderBottom: '1px solid rgba(10,22,40,0.12)',
+          bgcolor: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(10,22,40,0.06)',
           px: '2rem',
           display: 'flex',
           alignItems: 'center',
-          height: '60px',
+          height: '64px',
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          boxShadow: '0 2px 8px rgba(10,22,40,0.08)',
+          boxShadow: '0 1px 3px rgba(10,22,40,0.04)',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '14px', maxWidth: 1200, width: '100%', mx: 'auto' }}>
-          <Box component="img" src="/iit-ism-logo.svg" alt="IIT (ISM) Dhanbad" sx={{ width: 40, height: 40, objectFit: 'contain', flexShrink: 0 }} />
+          <Box component="img" src="/iit-ism-logo.svg" alt="IIT (ISM) Dhanbad" sx={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }} />
           <Box>
-            <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '15px', fontWeight: 600, color: '#0A1628', lineHeight: 1.2 }}>IIT (ISM) Dhanbad</Typography>
-            <Typography sx={{ fontSize: '10px', color: '#64748B', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Career Development Centre</Typography>
+            <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '16px', fontWeight: 700, color: '#0A1628', lineHeight: 1.2 }}>IIT (ISM) Dhanbad</Typography>
+            <Typography sx={{ fontSize: '10px', color: '#64748B', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 500 }}>Career Development Centre</Typography>
           </Box>
           <Box sx={{ ml: 'auto', display: 'flex', gap: 1 }}>
-            <Button component={Link} href="/login" size="small" sx={{ fontSize: '13px', color: '#64748B', border: '1px solid rgba(10,22,40,0.15)', borderRadius: '8px', px: '16px' }}>
+            <Button component={Link} href="/login" size="small" sx={{ fontSize: '14px', color: '#0A1628', border: '1px solid rgba(10,22,40,0.12)', borderRadius: '8px', px: '18px', fontWeight: 600, '&:hover': { bgcolor: 'rgba(10,22,40,0.03)' } }}>
               Recruiter Login
             </Button>
           </Box>
         </Box>
       </Box>
 
-      {/* Hero Banner */}
-      <Box
-        sx={{
-          bgcolor: '#0A1628',
-          position: 'relative',
-          overflow: 'hidden',
-          py: { xs: 4, md: 5 },
-        }}
-      >
-        <Box sx={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(200,146,42,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,146,42,0.04) 1px, transparent 1px)', backgroundSize: '48px 48px', pointerEvents: 'none' }} />
-        <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#C8922A' }} />
+      {/* ─── Hero Banner — matching landing hero style ─── */}
+      <Box sx={{ bgcolor: '#0A1628', position: 'relative', overflow: 'hidden', py: { xs: 4, md: 5 } }}>
+        {/* Gradient orbs */}
+        <Box sx={{ position: 'absolute', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,146,42,0.1) 0%, transparent 70%)', top: '-20%', right: '-5%', pointerEvents: 'none' }} />
+        <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, #C8922A, #E8B64A, #C8922A)' }} />
         <Box sx={{ maxWidth: 1200, mx: 'auto', px: '2rem', position: 'relative' }}>
-          <Typography component="div" sx={{
-            display: 'inline-flex', alignItems: 'center', gap: '8px', bgcolor: 'rgba(200,146,42,0.15)', border: '1px solid rgba(200,146,42,0.35)', color: '#E8B64A',
-            px: '14px', py: '5px', borderRadius: '2px', fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500, mb: 2,
+          <Box sx={{
+            display: 'inline-flex', alignItems: 'center', gap: '10px',
+            bgcolor: 'rgba(200,146,42,0.1)', border: '1px solid rgba(200,146,42,0.2)',
+            color: '#E8B64A', px: '16px', py: '6px', borderRadius: '8px',
+            fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, mb: 3,
           }}>
-            <Box component="span" sx={{ width: 6, height: 6, bgcolor: '#E8B64A', borderRadius: '50%', display: 'inline-block', animation: 'pulse 2s infinite', '@keyframes pulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.4 } } }} />
+            <Box sx={{ width: 7, height: 7, bgcolor: '#E8B64A', borderRadius: '50%', animation: 'pulse 2s infinite', '@keyframes pulse': { '0%, 100%': { opacity: 1, transform: 'scale(1)' }, '50%': { opacity: 0.4, transform: 'scale(0.8)' } } }} />
             Company Registration
+          </Box>
+          <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: { xs: '28px', md: '38px' }, fontWeight: 700, color: '#FEFEFE', lineHeight: 1.1, mb: 1.5, letterSpacing: '-0.02em' }}>
+            Register as a <Box component="span" sx={{ color: '#E8B64A' }}>Recruiter</Box>
           </Typography>
-          <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: { xs: '28px', md: '36px' }, fontWeight: 500, color: '#FEFEFE', lineHeight: 1.15, mb: 1 }}>
-            Register as a <em style={{ color: '#E8B64A' }}>Recruiter</em>
-          </Typography>
-          <Typography sx={{ fontSize: '14px', color: 'rgba(255,255,255,0.55)', maxWidth: 520, lineHeight: 1.7 }}>
+          <Typography sx={{ fontSize: '15px', color: 'rgba(255,255,255,0.45)', maxWidth: 520, lineHeight: 1.7 }}>
             Join 500+ companies recruiting from IIT (ISM) Dhanbad. Complete the 3-step registration to access JNF and INF submission portals.
           </Typography>
         </Box>
       </Box>
 
-      {/* Main Content */}
-      <Box sx={{ flex: 1, bgcolor: '#F4F6F9', py: 5 }}>
+      {/* ─── Main Content ─── */}
+      <Box sx={{ flex: 1, py: 5 }}>
         <Box sx={{ maxWidth: 800, mx: 'auto', px: '2rem' }}>
-          {/* Step Indicators */}
-          <Box sx={{ mb: 4 }}>
-            {/* Row 1: Circles with connecting lines */}
+
+          {/* ─── Stepper — matching login/JNF style ─── */}
+          <Box sx={{ mb: 5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-              {steps.map((label, index) => (
-                <Box key={label} sx={{ display: 'flex', alignItems: 'center', flex: index < steps.length - 1 ? 1 : 'none' }}>
-                  <Box
-                    sx={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+              {steps.map((label, i) => {
+                const isActive = activeStep === i;
+                const isDone = i < activeStep;
+                return (
+                  <Box key={label} sx={{ display: 'flex', alignItems: 'center', flex: i < steps.length - 1 ? 1 : 'none' }}>
+                    <Box sx={{
+                      width: 36, height: 36, borderRadius: '50%',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '12px', fontWeight: 700,
                       fontFamily: '"JetBrains Mono", monospace',
-                      fontSize: '12px',
-                      fontWeight: 500,
-                      flexShrink: 0,
-                      transition: 'all 0.2s',
-                      ...(index < activeStep
-                        ? { bgcolor: '#C8922A', color: '#FEFEFE' }
-                        : index === activeStep
-                          ? { bgcolor: '#0A1628', color: '#FEFEFE' }
-                          : { bgcolor: '#FEFEFE', color: '#64748B', border: '2px solid rgba(10,22,40,0.12)' }),
-                    }}
-                  >
-                    {index < activeStep ? '✓' : `0${index + 1}`}
-                  </Box>
-                  {index < steps.length - 1 && (
-                    <Box
-                      sx={{
-                        flex: 1,
-                        height: '1px',
-                        mx: 1,
-                        bgcolor: index < activeStep ? '#C8922A' : 'rgba(10,22,40,0.12)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      bgcolor: isDone ? '#C8922A' : isActive ? '#0A1628' : 'transparent',
+                      color: isDone || isActive ? '#FFF' : '#94A3B8',
+                      border: `2px solid ${isDone ? '#C8922A' : isActive ? '#0A1628' : '#E2E8F0'}`,
+                      boxShadow: isActive ? '0 0 0 4px rgba(10,22,40,0.06)' : isDone ? '0 0 0 4px rgba(200,146,42,0.1)' : 'none',
+                    }}>
+                      {isDone ? '✓' : `0${i + 1}`}
+                    </Box>
+                    {i < steps.length - 1 && (
+                      <Box sx={{
+                        flex: 1, height: '2px', mx: 1.5,
+                        bgcolor: isDone ? '#C8922A' : '#E2E8F0',
+                        transition: 'background-color 0.5s',
+                        borderRadius: 1,
                         display: { xs: 'none', sm: 'block' },
-                      }}
-                    />
-                  )}
-                </Box>
-              ))}
+                      }} />
+                    )}
+                  </Box>
+                );
+              })}
             </Box>
-            {/* Row 2: Labels */}
-            <Box sx={{ display: 'flex' }}>
-              {steps.map((label, index) => (
+            <Box sx={{ display: 'flex', mt: 1 }}>
+              {steps.map((label, i) => (
                 <Box key={label} sx={{ flex: 1, pr: 1 }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: index === activeStep ? 600 : 400, color: index === activeStep ? '#0A1628' : '#64748B', lineHeight: 1.2 }}>
+                  <Typography sx={{
+                    fontSize: '13px', fontWeight: activeStep === i ? 600 : 400,
+                    color: activeStep === i ? '#0A1628' : '#94A3B8',
+                    transition: 'all 0.3s',
+                  }}>
                     {label}
                   </Typography>
                 </Box>
               ))}
             </Box>
-            <LinearProgress
-              variant="determinate"
-              value={progressPercent}
-              sx={{
-                height: 3,
-                borderRadius: 2,
-                bgcolor: 'rgba(10,22,40,0.06)',
-                '& .MuiLinearProgress-bar': { bgcolor: '#C8922A', borderRadius: 2 },
-              }}
-            />
-            <Typography sx={{ fontSize: '11.5px', color: '#64748B', mt: 1, fontFamily: '"JetBrains Mono", monospace' }}>
-              Step {activeStep + 1} of {steps.length} · {Math.round(progressPercent)}% complete
+            <Typography sx={{ fontSize: '11px', color: '#94A3B8', mt: 1.5, fontFamily: '"JetBrains Mono", monospace' }}>
+              Step {activeStep + 1} of {steps.length}
             </Typography>
           </Box>
 
-          {/* Form Card */}
+          {/* ─── Form Card — matching JNF/INF card style ─── */}
           <Box
             sx={{
-              bgcolor: '#FEFEFE',
-              borderRadius: '8px',
-              border: '1px solid rgba(10,22,40,0.12)',
+              bgcolor: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1px solid rgba(10,22,40,0.06)',
               overflow: 'hidden',
-              boxShadow: '0 4px 20px rgba(10,22,40,0.12)',
+              boxShadow: '0 4px 24px rgba(10,22,40,0.06), 0 1px 3px rgba(10,22,40,0.04)',
             }}
           >
-            {/* Form Header */}
-            <Box sx={{ bgcolor: '#F4F6F9', borderBottom: '1px solid rgba(10,22,40,0.12)', px: 3, py: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography sx={{ fontSize: '14px', fontWeight: 500, color: '#0A1628' }}>
+            {/* Card Header */}
+            <Box sx={{
+              borderBottom: '1px solid rgba(10,22,40,0.04)',
+              bgcolor: 'rgba(247,248,250,0.5)',
+              px: 4, py: 2.5,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <Typography sx={{ fontFamily: '"Inter", sans-serif', fontSize: '18px', fontWeight: 700, color: '#0A1628' }}>
                 {steps[activeStep]}
               </Typography>
-              <Typography sx={{ fontFamily: '"JetBrains Mono", monospace', fontSize: '11px', color: '#64748B', bgcolor: '#E8EBF0', px: '8px', py: '3px', borderRadius: '8px' }}>
+              <Typography sx={{ fontFamily: '"JetBrains Mono", monospace', fontSize: '10px', color: '#64748B', bgcolor: '#F1F5F9', px: '10px', py: '4px', borderRadius: '6px', fontWeight: 500 }}>
                 {activeStep === 0 ? 'Verify Email' : activeStep === 1 ? 'Personal Info' : 'Company Details'}
               </Typography>
             </Box>
 
-            {/* Form Body */}
-            <Box sx={{ p: 3 }}>
+            {/* Card Body */}
+            <Box sx={{ p: 4 }}>
               {error && (
                 <Alert
                   severity="error"
                   sx={{
-                    mb: 3,
-                    bgcolor: 'rgba(139,26,26,0.08)',
-                    color: '#DC2626',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(139,26,26,0.15)',
+                    mb: 3, borderRadius: '10px',
+                    bgcolor: '#FEF2F2', color: '#DC2626',
+                    border: '1px solid #FECACA',
                     '& .MuiAlert-icon': { color: '#DC2626' },
-                    fontSize: '13px',
+                    fontSize: '14px',
                   }}
                   onClose={() => setError('')}
                 >
@@ -453,14 +453,10 @@ export default function RegisterPage() {
               {/* Step 0: Email Verification */}
               {activeStep === 0 && (
                 <Box>
-                  <Typography sx={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 500, mb: 2 }}>
-                    Email Verification
-                  </Typography>
+                  <SectionHeader>Email Verification</SectionHeader>
 
-                  <Box sx={{ mb: 2.5 }}>
-                    <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                      Company Email Address <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                    </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <FieldLabel required>Company Email Address</FieldLabel>
                     <TextField
                       fullWidth
                       type="email"
@@ -484,37 +480,36 @@ export default function RegisterPage() {
                         bgcolor: '#0A1628',
                         color: '#FEFEFE',
                         px: 3,
-                        fontSize: '13px',
-                        '&:hover': { bgcolor: '#2C3345' },
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        borderRadius: '10px',
+                        '&:hover': { bgcolor: '#1A2A44' },
                       }}
                     >
                       {loading ? <CircularProgress size={20} sx={{ color: '#FEFEFE' }} /> : 'Send Verification OTP →'}
                     </Button>
                   ) : (
-                    <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(10,22,40,0.08)' }}>
+                    <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(10,22,40,0.06)' }}>
                       <Alert
                         severity="success"
                         sx={{
-                          mb: 3,
-                          bgcolor: 'rgba(29,107,58,0.08)',
-                          borderRadius: '8px',
-                          border: '1px solid rgba(29,107,58,0.15)',
-                          fontSize: '13px',
+                          mb: 3, borderRadius: '10px',
+                          bgcolor: '#F0FDF4',
+                          border: '1px solid #BBF7D0',
+                          fontSize: '14px',
                         }}
                       >
                         OTP sent to <strong>{formData.email}</strong>. Check your inbox.
                       </Alert>
 
-                      <Box sx={{ mb: 2.5 }}>
-                        <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                          Enter 6-digit OTP <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                        </Typography>
+                      <Box sx={{ mb: 3 }}>
+                        <FieldLabel required>Enter 6-digit OTP</FieldLabel>
                         <TextField
                           fullWidth
                           placeholder="000000"
                           value={formData.otp}
                           onChange={handleChange('otp')}
-                          inputProps={{ maxLength: 6, style: { letterSpacing: '0.3em', fontFamily: '"JetBrains Mono", monospace', fontWeight: 500 } }}
+                          inputProps={{ maxLength: 6, style: { letterSpacing: '0.3em', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600 } }}
                           size="small"
                           id="register-otp"
                         />
@@ -527,11 +522,8 @@ export default function RegisterPage() {
                           disabled={loading || formData.otp.length !== 6}
                           id="verify-otp-btn"
                           sx={{
-                            bgcolor: '#C8922A',
-                            color: '#FEFEFE',
-                            px: 3,
-                            fontSize: '13px',
-                            fontWeight: 600,
+                            bgcolor: '#C8922A', color: '#FEFEFE',
+                            px: 3, fontSize: '14px', fontWeight: 600, borderRadius: '10px',
                             '&:hover': { bgcolor: '#E8B64A' },
                           }}
                         >
@@ -541,7 +533,7 @@ export default function RegisterPage() {
                           variant="text"
                           onClick={handleSendOtp}
                           disabled={loading}
-                          sx={{ fontSize: '12.5px', color: '#C8922A' }}
+                          sx={{ fontSize: '13px', color: '#C8922A', fontWeight: 600 }}
                         >
                           Resend OTP
                         </Button>
@@ -554,37 +546,27 @@ export default function RegisterPage() {
               {/* Step 1: Recruiter Details */}
               {activeStep === 1 && (
                 <Box>
-                  <Typography sx={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 500, mb: 2 }}>
-                    Recruiter Information
-                  </Typography>
+                  <SectionHeader>Recruiter Information</SectionHeader>
 
-                  <Grid container spacing={2}>
+                  <Grid container spacing={2.5}>
                     <Grid item xs={12}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Full Name <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Full Name</FieldLabel>
                       <TextField fullWidth placeholder="John Doe" value={formData.name} onChange={handleChange('name')} required size="small" id="register-name" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Designation <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Designation</FieldLabel>
                       <TextField fullWidth placeholder="HR Manager" value={formData.designation} onChange={handleChange('designation')} required size="small" id="register-designation" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Mobile (+91) <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Mobile (+91)</FieldLabel>
                       <TextField fullWidth placeholder="+91 98765 43210" value={formData.mobile} onChange={handleChange('mobile')} required size="small" id="register-mobile" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Alternative Mobile</Typography>
+                      <FieldLabel>Alternative Mobile</FieldLabel>
                       <TextField fullWidth placeholder="Optional" value={formData.alt_mobile} onChange={handleChange('alt_mobile')} size="small" id="register-alt-mobile" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Password <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Password</FieldLabel>
                       <TextField
                         fullWidth
                         type={showPassword ? 'text' : 'password'}
@@ -597,7 +579,7 @@ export default function RegisterPage() {
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
-                              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small" sx={{ color: '#64748B' }}>
+                              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small" sx={{ color: '#94A3B8' }}>
                                 {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                               </IconButton>
                             </InputAdornment>
@@ -606,9 +588,7 @@ export default function RegisterPage() {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Confirm Password <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Confirm Password</FieldLabel>
                       <TextField fullWidth type="password" placeholder="Re-enter password" value={formData.password_confirmation} onChange={handleChange('password_confirmation')} required size="small" id="register-confirm-password" />
                     </Grid>
                   </Grid>
@@ -618,21 +598,15 @@ export default function RegisterPage() {
               {/* Step 2: Company Profile */}
               {activeStep === 2 && (
                 <Box>
-                  <Typography sx={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#C8922A', fontWeight: 500, mb: 2 }}>
-                    Company Details
-                  </Typography>
+                  <SectionHeader>Company Details</SectionHeader>
 
-                  <Grid container spacing={2}>
+                  <Grid container spacing={2.5}>
                     <Grid item xs={12}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Company Name <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Company Name</FieldLabel>
                       <TextField fullWidth placeholder="Acme Corporation" value={formData.company_name} onChange={handleChange('company_name')} required size="small" id="register-company-name" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                        Category <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                      </Typography>
+                      <FieldLabel required>Category</FieldLabel>
                       <FormControl fullWidth size="small" required>
                         <Select value={formData.company_category} onChange={handleSelectChange('company_category')} displayEmpty id="register-category">
                           <MenuItem value="" disabled>Select category</MenuItem>
@@ -641,23 +615,23 @@ export default function RegisterPage() {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Website</Typography>
+                      <FieldLabel>Website</FieldLabel>
                       <TextField fullWidth placeholder="https://company.com" value={formData.company_website} onChange={handleChange('company_website')} size="small" id="register-website" />
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Postal Address</Typography>
+                      <FieldLabel>Postal Address</FieldLabel>
                       <TextField fullWidth multiline rows={2} placeholder="Registered office address" value={formData.company_address} onChange={handleChange('company_address')} size="small" id="register-address" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Sector</Typography>
+                      <FieldLabel>Sector</FieldLabel>
                       <TextField fullWidth placeholder="e.g., IT, Manufacturing" value={formData.company_sector} onChange={handleChange('company_sector')} size="small" id="register-sector" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Nature of Business</Typography>
+                      <FieldLabel>Nature of Business</FieldLabel>
                       <TextField fullWidth placeholder="e.g., Product, Services" value={formData.company_nature} onChange={handleChange('company_nature')} size="small" id="register-nature" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>No. of Employees</Typography>
+                      <FieldLabel>No. of Employees</FieldLabel>
                       <FormControl fullWidth size="small">
                         <Select value={formData.company_employees} onChange={handleSelectChange('company_employees')} displayEmpty id="register-employees">
                           <MenuItem value="" disabled>Select range</MenuItem>
@@ -666,11 +640,11 @@ export default function RegisterPage() {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Date of Establishment</Typography>
+                      <FieldLabel>Date of Establishment</FieldLabel>
                       <TextField fullWidth type="date" value={formData.company_establishment} onChange={handleChange('company_establishment')} InputLabelProps={{ shrink: true }} size="small" id="register-established" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Annual Turnover (NIRF)</Typography>
+                      <FieldLabel>Annual Turnover (NIRF)</FieldLabel>
                       <FormControl fullWidth size="small">
                         <Select value={formData.company_turnover} onChange={handleSelectChange('company_turnover')} displayEmpty id="register-turnover">
                           <MenuItem value="" disabled>Select range</MenuItem>
@@ -679,29 +653,25 @@ export default function RegisterPage() {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>LinkedIn URL</Typography>
+                      <FieldLabel>LinkedIn URL</FieldLabel>
                       <TextField fullWidth placeholder="https://linkedin.com/company/..." value={formData.linkedin_url} onChange={handleChange('linkedin_url')} size="small" id="register-linkedin" />
                     </Grid>
                     {formData.company_category === 'MNC' && (
                       <>
                         <Grid item xs={12} sm={6}>
-                          <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                            Parent HQ Country <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                          </Typography>
+                          <FieldLabel required>Parent HQ Country</FieldLabel>
                           <TextField fullWidth value={formData.parent_hq_country} onChange={handleChange('parent_hq_country')} required size="small" id="register-hq-country" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                          <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>
-                            Parent HQ City <Box component="span" sx={{ color: '#DC2626' }}>*</Box>
-                          </Typography>
+                          <FieldLabel required>Parent HQ City</FieldLabel>
                           <TextField fullWidth value={formData.parent_hq_city} onChange={handleChange('parent_hq_city')} required size="small" id="register-hq-city" />
                         </Grid>
                       </>
                     )}
                     <Grid item xs={12}>
-                      <Box sx={{ height: '1px', bgcolor: 'rgba(10,22,40,0.08)', my: 1 }} />
-                      <Typography sx={{ fontSize: '12px', color: '#64748B', fontWeight: 500, mb: '6px' }}>Industry Tags</Typography>
-                      <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                      <Box sx={{ height: '1px', bgcolor: 'rgba(10,22,40,0.04)', my: 1 }} />
+                      <FieldLabel>Industry Tags</FieldLabel>
+                      <Box sx={{ display: 'flex', gap: 1, mb: 1.5 }}>
                         <TextField
                           placeholder="e.g., FinTech, AI, Cloud"
                           value={newTag}
@@ -714,7 +684,7 @@ export default function RegisterPage() {
                         <Button
                           variant="outlined"
                           onClick={handleAddTag}
-                          sx={{ borderColor: 'rgba(10,22,40,0.15)', color: '#0A1628', fontSize: '12.5px', minWidth: 60 }}
+                          sx={{ borderColor: 'rgba(10,22,40,0.12)', color: '#0A1628', fontSize: '13px', fontWeight: 600, minWidth: 70, borderRadius: '8px' }}
                           id="register-add-tag"
                         >
                           + Add
@@ -728,10 +698,12 @@ export default function RegisterPage() {
                             onDelete={() => handleRemoveTag(tag)}
                             size="small"
                             sx={{
-                              bgcolor: 'rgba(10,22,40,0.06)',
+                              bgcolor: 'rgba(200,146,42,0.06)',
                               color: '#0A1628',
-                              fontSize: '12px',
-                              '& .MuiChip-deleteIcon': { fontSize: '16px', color: '#64748B' },
+                              fontSize: '13px',
+                              fontWeight: 500,
+                              borderRadius: '8px',
+                              '& .MuiChip-deleteIcon': { fontSize: '16px', color: '#94A3B8' },
                             }}
                           />
                         ))}
@@ -742,19 +714,18 @@ export default function RegisterPage() {
               )}
             </Box>
 
-            {/* Form Footer */}
+            {/* ─── Card Footer — Next/Prev buttons ─── */}
             <Box
               sx={{
-                px: 3,
-                py: 2,
-                borderTop: '1px solid rgba(10,22,40,0.12)',
-                bgcolor: '#F4F6F9',
+                px: 4, py: 2.5,
+                borderTop: '1px solid rgba(10,22,40,0.04)',
+                bgcolor: 'rgba(247,248,250,0.5)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}
             >
-              <Typography sx={{ fontSize: '12px', color: '#64748B' }}>
+              <Typography sx={{ fontSize: '12px', color: '#94A3B8', fontFamily: '"JetBrains Mono", monospace' }}>
                 Step {activeStep + 1} of {steps.length}
               </Typography>
 
@@ -763,16 +734,17 @@ export default function RegisterPage() {
                   <Button
                     onClick={handleBack}
                     sx={{
-                      fontSize: '13px',
+                      fontSize: '14px',
                       color: '#0A1628',
-                      border: '1px solid rgba(10,22,40,0.2)',
-                      borderRadius: '8px',
-                      px: '20px',
-                      '&:hover': { bgcolor: '#F4F6F9' },
+                      border: '1px solid rgba(10,22,40,0.12)',
+                      borderRadius: '10px',
+                      px: '22px',
+                      fontWeight: 600,
+                      '&:hover': { bgcolor: 'rgba(10,22,40,0.03)' },
                     }}
                     id="register-back"
                   >
-                    ← Back
+                    ← Prev
                   </Button>
                 )}
                 {activeStep === 1 && (
@@ -783,12 +755,14 @@ export default function RegisterPage() {
                     sx={{
                       bgcolor: '#0A1628',
                       color: '#FEFEFE',
-                      fontSize: '13px',
-                      px: '20px',
-                      '&:hover': { bgcolor: '#2C3345' },
+                      fontSize: '14px',
+                      px: '22px',
+                      borderRadius: '10px',
+                      fontWeight: 600,
+                      '&:hover': { bgcolor: '#1A2A44' },
                     }}
                   >
-                    Save & Continue →
+                    Next →
                   </Button>
                 )}
                 {activeStep === 2 && (
@@ -800,9 +774,11 @@ export default function RegisterPage() {
                     sx={{
                       bgcolor: '#C8922A',
                       color: '#FEFEFE',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      px: '24px',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      px: '28px',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 16px rgba(200,146,42,0.3)',
                       '&:hover': { bgcolor: '#E8B64A' },
                     }}
                   >
@@ -814,23 +790,23 @@ export default function RegisterPage() {
           </Box>
 
           {/* Bottom Link */}
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
-            <Typography sx={{ fontSize: '13px', color: '#64748B' }}>
+          <Box sx={{ mt: 4, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '14px', color: '#64748B' }}>
               Already registered?{' '}
-              <Link href="/login" style={{ color: '#C8922A', fontWeight: 500, textDecoration: 'none' }}>Login here →</Link>
+              <Link href="/login" style={{ color: '#C8922A', fontWeight: 600, textDecoration: 'none' }}>Login here →</Link>
             </Typography>
           </Box>
         </Box>
       </Box>
 
-      {/* Footer */}
-      <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.5)', py: 2.5, px: '2rem' }}>
+      {/* ─── Footer ─── */}
+      <Box sx={{ bgcolor: '#0A1628', color: 'rgba(255,255,255,0.3)', py: 2.5, px: '2rem' }}>
         <Box sx={{ maxWidth: 1200, mx: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Box sx={{ width: 20, height: 2, bgcolor: '#C8922A' }} />
-            CDC Recruitment Portal v1.0 · IIT (ISM) Dhanbad
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Box sx={{ width: 20, height: 2, bgcolor: '#C8922A', borderRadius: 1 }} />
+            CDC Recruitment Portal v2.0 · IIT (ISM) Dhanbad
           </Box>
-          <span>Next.js · MUI · Laravel · MySQL</span>
+          <span>© {new Date().getFullYear()} All rights reserved</span>
         </Box>
       </Box>
     </Box>
